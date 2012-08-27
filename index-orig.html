@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- Google Website Optimizer Control Script -->
+<script>
+function utmx_section(){}function utmx(){}
+(function(){var k='3023495022',d=document,l=d.location,c=d.cookie;function f(n){
+if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.indexOf(';',i);return escape(c.substring(i+n.
+length+1,j<0?c.length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;
+d.write('<sc'+'ript src="'+
+'http'+(l.protocol=='https:'?'s://ssl':'://www')+'.google-analytics.com'
++'/siteopt.js?v=1&utmxkey='+k+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='
++new Date().valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+'" type="text/javascript" charset="utf-8"></sc'+'ript>')})();
+</script><script>utmx("url",'A/B');</script>
+<!-- End of Google Website Optimizer Control Script -->
+<!-- Google Website Optimizer Tracking Script -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['gwo._setAccount', 'UA-4350990-34']);
+  _gaq.push(['gwo._trackPageview', '/3023495022/test']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- End of Google Website Optimizer Tracking Script -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="google-site-verification" content="qVmvO3NyLR_D-MknuCHBDt8xwyYNhBtZrEeujzOR-L0" />
+<title>Vos amis peuvent vous rembourser par CB avec Rembourse moi</title>
+<link rel="stylesheet" type="text/css" href="view.css" media="all">
+<link rel="image_src" href="http://remboursemoi.fr/explication.png"/>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
+<script type="text/javascript" src="view.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#form_257949").validate(
+    {
+  		rules: {
+	    	email: {
+	    	  required: true,
+		      email: true
+	    	},
+	    	name: {
+	    	  required: true,
+	    	},
+	    	amount: {
+	    		required: true,
+	    		digits: true
+	    	},
+	    	cent: {
+	    		required: true,
+	    		digits: true
+	    	}
+  		},
+  		messages: {
+	        email: "J'ai besoin de ton adresse email! Sinon comment je fais pour te payer?!?",
+	        name: "Il me faut ton nom c'est plus sympas...",
+	        amount: "Aller dis moi combien il te dois...",
+	        cent: "N'oublis pas les centimes ;)"
+	    }
+	}
+    );
+});
+</script>
+</head>
+<body id="main_body" >
+	
+	<img id="top" src="top.png" alt="">
+	<div id="form_container">
+	
+		<h1>Remboursement entre amis</h1>
+		<form id="form_257949" class="appnitro"  method="get" action="pay.php">
+					<div class="form_description">
+			<h2><a href="http://www.remboursemoi.fr">Rembourse moi</a></h2>
+			<p>Les bons comptes font les bons amis alors restons amis.</p>
+		</div>
+		<img src="explication.png" style="width:600px"/>
+			<ul >
+			
+					<li id="li_1" >
+		<label class="description" for="element_1">Ton e-mail </label>
+		<div>
+			<input id="element_1" name="email" class="element text large" type="text" maxlength="255" value=""/> 
+		</div><p class="guidelines" id="guide_1"><small>C'est l'adresse à laquelle te seras envoyer l'argent via PayPal.</small></p> 
+		</li>		<li id="li_2" >
+		<label class="description" for="element_2">Ton prénom</label>
+		<div>
+			<input id="element_2" name="name" class="element text large" type="text" maxlength="255" value=""/> 
+		</div><p class="guidelines" id="guide_2"><small>Ton prénom/nom/pseudo comme tu veux c'est toi qui vois.</small></p> 
+		</li>		<li id="li_3" >
+		<label class="description" for="element_3">On te doit combien?</label>
+		<span>
+			<input id="element_3_1" name="amount" class="element text currency large" size="10" value="" type="text" />
+		</span>
+		<span>
+			. <input id="element_3_2" name="cent" class="element text medium" size="2" maxlength="2" value="00" type="text" />
+		</span>
+		<p class="guidelines" id="guide_3"><small>C'est la somme qui lui sera demandé de payer. C'est en &#8364; !</small></p> 
+		</li>
+			
+					<li class="buttons">
+			    <input type="hidden" name="form_id" value="257949" />
+			    
+				<input id="saveForm" class="button_text" type="submit" name="submit" value="Demande à être rembourser" />
+		</li>
+			</ul>
+		</form>	
+		<div id="footer">
+			<a href="http://benjaminazan.fr">Benjamin Azan</a>
+		</div>
+	</div>
+	<img id="bottom" src="bottom.png" alt="">
+	</body>
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4350990-32']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</html>

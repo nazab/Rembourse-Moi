@@ -1,0 +1,1 @@
+ursemoi.fr/balance.php?hash='.$_POST['hash'].'&message=transfert';
