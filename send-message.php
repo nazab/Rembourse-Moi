@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php
+require 'rmb_conf.php';
 if(!empty($_GET['qte'])) {
 		$qte = $_GET['qte'];
 	} else {
@@ -54,21 +55,14 @@ $short_url = 'http://j.mp/'.$results['hash'];
 </form><br/><br/>pour te faire rembourser.<br/><br/>Merci !
 		</p>
 		<?php
-		
-		define('DB_NAME', 'brackeimmyblog');
-		/** MySQL database username */
-		define('DB_USER', 'brackeimmyblog');
-		
-		/** MySQL database password */
-		define('DB_PASSWORD', 'tdfftxWN');
-		
-		/** MySQL hostname */
-		define('DB_HOST', 'mysql51-37.perso');
-		
-		$cnx = mysql_connect(DB_HOST, DB_USER , DB_PASSWORD);
-		mysql_select_db(DB_NAME);
-		$qry = "INSERT INTO `remboursemoi_request` (`rmb_name`,`rmb_email`,`rmb_amount`) values ('".mysql_real_escape_string($_GET['name'])."','".mysql_real_escape_string($_GET['email'])."','".mysql_real_escape_string($_GET['amount'].'.'.$_GET['cent'])."')";
-		mysql_query($qry,$cnx);
+		$stmt = $dbh->prepare("INSERT INTO `remboursemoi_request` (`rmb_name`,`rmb_email`,`rmb_amount`) values (?,?,?)"); 
+
+    try { 
+        $stmt->execute( array($_GET['name'], $_GET['email'],$_GET['amount'].'.'.$_GET['cent']));
+    } catch(PDOExecption $e) { 
+        $dbh->rollback(); 
+        die("Error!: " . $e->getMessage() . "</br>");
+    } 
 		?>
 		</div>
 		<div id="footer">
