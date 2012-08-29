@@ -43,7 +43,6 @@ if(!empty($_GET['qte'])) {
 		<div id="pay_description">
 <?php
 try { 
-    $dbh = new PDO('mysql:host='.DBHOST.';dbname='.DBNAME, DBUSER, DBPASS);
 
     $stmt = $dbh->prepare("INSERT INTO remboursemoi_transaction (bnf_name, bnf_email,tx_qte,tx_unit_price) VALUES(?,?,?,?)"); 
 
