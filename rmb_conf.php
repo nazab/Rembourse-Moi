@@ -1,8 +1,21 @@
 <?php
-define('DBNAME','brackeimmyblog');
-define('DBHOST','mysql51-37.perso');
-define('DBUSER','brackeimmyblog');
-define('DBPASS','tdfftxWN');
+$host = $_SERVER['HTTP_HOST'];
+switch($host) {
+	case 'remboursemoi.fr':
+		define('DBNAME','brackeimmyblog');
+		define('DBHOST','mysql51-37.perso');
+		define('DBUSER','brackeimmyblog');
+		define('DBPASS','tdfftxWN');
+	break;
+	
+	case 'dev.remboursemoi':
+		define('DBNAME','rmbdev');
+		define('DBHOST','localhost');
+		define('DBUSER','root');
+		define('DBPASS','root');
+	break;
+
+}
 define('HASH_SALT','A3DdFG906');
 //@TODO change to paiement@remboursemoi.fr
 define('PAYPAL_BUSINESS_EMAIL','marie_1345148567_biz@gmail.com');
