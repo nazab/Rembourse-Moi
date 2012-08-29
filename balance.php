@@ -19,7 +19,7 @@ if(!empty($_GET['hash'])) {
         $dbh->rollback(); 
         die("Error!: " . $e->getMessage() . "</br>");
     }
-	// Fetch all the transaction made fo this email address
+	// Fetch all the transaction made for this email address
 	$stmt = $dbh->prepare("select ht_firstname,ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob from remboursemoi_transaction where bnf_email = ? AND pp_txn_id is not null and tr_id is null");
     try {
         $stmt->execute( array($email_from_hash));
@@ -28,8 +28,15 @@ if(!empty($_GET['hash'])) {
         $dbh->rollback(); 
         die("Error!: " . $e->getMessage() . "</br>");
     }
-
-	
+    // Fetch all the transaction pending for a transfert made for this email address
+	$stmt = $dbh->prepare("select ht_firstname,ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob, tr_status,tr_complete_date from remboursemoi_transaction tx, remboursemoi_transfert_request tr where bnf_email = ? AND pp_txn_id is not null and tr_id = tr.ID");
+    try {
+        $stmt->execute( array($email_from_hash));
+        $transfert_list = $stmt->fetchAll();
+    } catch(PDOExecption $e) { 
+        $dbh->rollback(); 
+        die("Error!: " . $e->getMessage() . "</br>");
+    }
 } else {
 	die();
 }
@@ -94,6 +101,7 @@ $(document).ready(function(){
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
  })();
 </script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body id="main_body" >
 	<img id="top" src="top.png" alt="">
@@ -121,7 +129,21 @@ $(document).ready(function(){
 			<h2>Votre solde est de <?php echo number_format($sum,2,',',' ');?>&#8364;</h2>
 			<p style="font-size:14px;">
 			<?php foreach($payment_list as $p) {
-					echo '- '.htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']).' '.htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364;<br/>';
+					echo '<span class="icon-gift"></span>'.htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']).' '.htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364; <br/>';
+				}
+				foreach($transfert_list as $t) {
+					switch($p['tr_status']) {
+						case 'PENDING':
+							echo '<span class="icon-road"></span>';
+						break;
+						case 'COMPLETED':
+							echo '<span class="icon-ok"></span>';
+						break;
+						default:
+							echo $p['tr_status'];
+						break;
+					}
+					echo htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']).' '.htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364; <br/>';
 				}
 			?>
 			</p>
@@ -168,5 +190,6 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<img id="bottom" src="bottom.png" alt="">
+	 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
