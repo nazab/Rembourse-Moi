@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost:3306
--- Généré le : Mer 29 Août 2012 à 17:08
+-- Généré le : Mer 29 Août 2012 à 17:22
 -- Version du serveur: 5.5.9
 -- Version de PHP: 5.3.6
 
@@ -87,7 +87,7 @@ CREATE TABLE `remboursemoi_transfert_request` (
   `code_guichet` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `num_compte` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
   `cle_rib` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
-  `tr_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tr_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'PENDING',
   `tr_complete_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
