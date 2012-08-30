@@ -1,5 +1,35 @@
 <?php
 require('rmb_conf.php');
+function relative_time( $iTime )
+{
+	$iTimeDifference = time() - $iTime ;
+	
+	if( $iTimeDifference<0 ) { return; }
+	
+	$iSeconds = $iTimeDifference ;
+	$iMinutes = round( $iTimeDifference/60 );
+	$iHours = round( $iTimeDifference/3600 );
+	$iDays = round( $iTimeDifference/86400 );
+	$iWeeks = round( $iTimeDifference/604800 );
+	$iMonths = round( $iTimeDifference/2419200 );
+	$iYears = round( $iTimeDifference/29030400 );
+	
+	if( $iSeconds<60 )
+	return "Il y a moins d'une minute";
+	elseif( $iMinutes<60 )
+	return 'Il y a ' . $iMinutes . ' minute' . ( $iMinutes>1 ? 's' : '');
+	elseif( $iHours<24 )
+	return 'Il y a ' . $iHours . ' heure' . ( $iHours>1 ? 's' :  '' );
+	elseif( $iDays<7 )
+	return 'Il y a ' . $iDays . ' jour' . ( $iDays>1 ? 's' :  '' );
+	elseif( $iWeeks <4 )
+	return 'Il y a ' . $iWeeks . ' semaine' . ( $iWeeks>1 ? 's' :  '' );
+	elseif( $iMonths<12 )
+	return 'Il y a ' . $iMonths . ' mois';
+	else
+	return 'Il y a ' . $iYears . ' an' . ( $iYears>1 ? 's' :  '' );
+}
+
 if(!empty($_GET['hash'])) {
 	$hash = $_GET['hash'];
 	// Check hash is a real one
@@ -19,17 +49,13 @@ if(!empty($_GET['hash'])) {
         $dbh->rollback(); 
         die("Error!: " . $e->getMessage() . "</br>");
     }
-	// Fetch all the transaction made for this email address
-	$stmt = $dbh->prepare("select ht_firstname,ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob from remboursemoi_transaction where bnf_email = ? AND pp_txn_id is not null and tr_id is null");
-    try {
-        $stmt->execute( array($email_from_hash));
-        $payment_list = $stmt->fetchAll();
-    } catch(PDOExecption $e) { 
-        $dbh->rollback(); 
-        die("Error!: " . $e->getMessage() . "</br>");
-    }
-    // Fetch all the transaction pending for a transfert made for this email address
-	$stmt = $dbh->prepare("select ht_firstname,ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob, tr_status,tr_complete_date from remboursemoi_transaction tx, remboursemoi_transfert_request tr where bnf_email = ? AND pp_txn_id is not null and tr_id = tr.ID");
+    // Fetch all the transaction pending or not for a transfert made for this email address
+	$stmt = $dbh->prepare("SELECT ht_firstname, ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob, tr_status, tr_complete_date, tx.created_at as tx_date
+FROM remboursemoi_transaction tx
+LEFT JOIN remboursemoi_transfert_request tr ON tx.tr_id = tr.ID
+WHERE bnf_email =  ?
+AND pp_txn_id IS NOT NULL 
+ORDER BY tx.created_at DESC");
     try {
         $stmt->execute( array($email_from_hash));
         $transfert_list = $stmt->fetchAll();
@@ -117,35 +143,69 @@ $(document).ready(function(){
 		<?php
 		if(!empty($_GET['message']) && $_GET['message'] == 'transfert_asked') {
 			?>
-			<p class="notification">L'argent sera sur votre compte sous 30 jours.<br/>Vous recevrez un email quand le virement sera effectué.</p>
+			
+			<div class="alert alert-info">
+L'argent sera sur <strong>votre compte sous 30 jours</strong>.<br/>Vous recevrez un email quand le virement sera effectué.
+</div>
 			<?php
 		}
 		$sum =  0;
-		foreach($payment_list as $p) {
-			$sum += $p['tx_unit_price'] * $p['tx_qte'];
+		foreach($transfert_list as $p) {
+			if($p['tr_status'] == null) {
+				$sum += $p['tx_unit_price'] * $p['tx_qte'];
 			}
+		}
 		
 		?>
 			<h2>Votre solde est de <?php echo number_format($sum,2,',',' ');?>&#8364;</h2>
 			<p style="font-size:14px;">
-			<?php foreach($payment_list as $p) {
-					echo '<span class="icon-gift"></span>'.htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']).' '.htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364; <br/>';
+			<table class="table table-bordered table-hover table-condesed">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Date</th>
+						<th>Montant</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach($transfert_list as $p) { 
+				switch($p['tr_status']) {
+					case 'PENDING':
+						echo '<tr class="info">';
+					break;
+					case 'COMPLETED':
+						echo '<tr class="success">';
+					break;
+					default:
+						echo '<tr>';
+					break;
 				}
-				foreach($transfert_list as $t) {
-					switch($p['tr_status']) {
-						case 'PENDING':
-							echo '<span class="icon-road"></span>';
-						break;
-						case 'COMPLETED':
-							echo '<span class="icon-ok"></span>';
-						break;
-						default:
-							echo $p['tr_status'];
-						break;
-					}
-					echo htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']).' '.htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364; <br/>';
-				}
-			?>
+				
+				
+				?>
+						<td><?php echo htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']); ?></td>
+						<td><?php echo htmlentities(relative_time(strtotime($p['tx_date']))); ?></td>
+						<td><?php echo htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364'; ?></td>
+						<td>
+							<?php
+								switch($p['tr_status']) {
+									case 'PENDING':
+										echo htmlentities('En attente de virement');
+									break;
+									case 'COMPLETED':
+										echo htmlentities('Virement efectué');
+									break;
+									default:
+										echo htmlentities('Disponible sur votre compte');
+									break;
+								}
+							?>
+						</td>
+					</tr>
+				<?php  } ?>
+				</tbody>
+			</table>
 			</p>
 			<p>
 			Demander un virement sur votre compte.<br/>
@@ -182,8 +242,6 @@ $(document).ready(function(){
 				
 				</form>	
 			</p>
-			
-			<p>Add pending transfert request list</p>	
 		</div>
 		<div id="footer">
 			<a href="http://benjaminazan.com">Benjamin Azan</a>
