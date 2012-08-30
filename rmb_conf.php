@@ -29,4 +29,4 @@ try {
 // Email vers lequel les demande de virements sont notifiés
 define('TRANSFERT_EMAIL','benjamin@nazab.com');
 // WebSite Email
-define('CONTACT_EMAIL','contact@remboursemoi.fr');
+define('CONTACT_EMAIL','paiement@remboursemoi.fr');

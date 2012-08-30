@@ -48,7 +48,7 @@ $subject = 'Nouvelle demande de virement pour Rembourse Moi';
 // approved domains only!
 $from = array(CONTACT_EMAIL =>'Rembourse Moi');
 $to = array(
- 'benjamin@nazab.com'  => 'Benjamin AZAN'
+ TRANSFERT_EMAIL  => 'Benjamin AZAN'
 );
 
 
