@@ -46,7 +46,7 @@ if(!empty($_GET['qte'])) {
 		<form>
 		<?php
 		$url = 'http://remboursemoi.fr/pay.php?email='.urlencode($_GET['email']).'&name='.urlencode($_GET['name']).'&amount='.urlencode($_GET['amount']).'&cent='.urlencode($_GET['cent']).'&qte='.urlencode($qte);
-require('bitly.php');
+require('lib/bitly.php');
 $bt = new Bitly('nazab','R_17a95912a5e8e7bd464b88c0f8236376');
 $results = $bt->shorten($url, 'j.mp');
 $short_url = 'http://j.mp/'.$results['hash'];
