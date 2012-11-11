@@ -17,8 +17,8 @@ switch($host) {
 
 }
 define('HASH_SALT','A3DdFG906');
-//@TODO change to paiement@remboursemoi.fr
-define('PAYPAL_BUSINESS_EMAIL','marie_1345148567_biz@gmail.com');
+//@TODO change to paiement@remboursemoi.fr (marie_1345148567_biz@gmail.com)
+define('PAYPAL_BUSINESS_EMAIL','paiement@remboursemoi.fr');
 define('MAILJET_USERNAME','f7a8d93d3037126d9180606d9aa16c49');
 define('MAILJET_PASSWORD','768c9243405675b728ba94d1d4f3572f');
 
