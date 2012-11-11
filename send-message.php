@@ -13,7 +13,9 @@ if(!empty($_GET['qte'])) {
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><?php echo htmlentities($_GET['name']);?> te demande de lui rembourser <?php echo htmlentities(number_format($price,2,',',' '));?>&#8364;.</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
 <script type="text/javascript" src="view.js"></script>
@@ -51,7 +53,7 @@ $bt = new Bitly('nazab','R_17a95912a5e8e7bd464b88c0f8236376');
 $results = $bt->shorten($url, 'j.mp');
 $short_url = 'http://j.mp/'.$results['hash'];
 ?>
-<input readonly="readonly" id="urltoshare" type="text" value="<?php echo $short_url;?>" style="font-size:20px;width:280px;"/>
+<input id="urltoshare" type="text" value="<?php echo $short_url;?>" style="font-size:20px;width:280px;"/>
 </form><br/><br/>pour te faire rembourser.<br/><br/>Merci !
 		</p>
 		<?php
@@ -75,5 +77,6 @@ $("#urltoshare").click(function() {
 	$(this).select();
 });
 </script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

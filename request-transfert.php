@@ -47,17 +47,16 @@ require('lib/Swift/swift_required.php');
 $subject = 'Nouvelle demande de virement pour Rembourse Moi';
 // approved domains only!
 $from = array(CONTACT_EMAIL =>'Rembourse Moi');
-$to = array(
- TRANSFERT_EMAIL  => 'Benjamin AZAN'
-);
+$to = array(TRANSFERT_EMAIL  => 'Benjamin AZAN');
 
 
-$text = "ID de la demande : '".$tr_id."'
-Lien vers le compte de la personne :  http://".$_SERVER['HTTP_HOST']."/balance.php?hash=".urlencode($hash);
+//$text = "ID de la demande : ".$tr_id." Lien vers le compte de la personne :  http://".$_SERVER['HTTP_HOST']."/balance.php?hash=".urlencode($hash);
+
+$text = 'coucou';
 
 $transport = Swift_SmtpTransport::newInstance('in.mailjet.com', 587);
-$transport->setUsername('f7a8d93d3037126d9180606d9aa16c49');
-$transport->setPassword('768c9243405675b728ba94d1d4f3572f');
+$transport->setUsername(MAILJET_USERNAME);
+$transport->setPassword(MAILJET_PASSWORD);
 $swift = Swift_Mailer::newInstance($transport);
 
 $message = new Swift_Message($subject);
@@ -66,7 +65,6 @@ $message->setBody($text, 'text/plain');
 $message->setTo($to);
 
 $recipients = $swift->send($message, $failures);
-
 
 // redirect to the balance page
 header('Location: http://'.$_SERVER['HTTP_HOST'].'/balance.php?hash='.urlencode($hash).'&message=transfert_asked');

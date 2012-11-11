@@ -50,7 +50,7 @@ if(!empty($_GET['hash'])) {
         die("Error!: " . $e->getMessage() . "</br>");
     }
     // Fetch all the transaction pending or not for a transfert made for this email address
-	$stmt = $dbh->prepare("SELECT ht_firstname, ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob, tr_status, tr_complete_date, tx.created_at as tx_date
+	$stmt = $dbh->prepare("SELECT tx_fee, ht_firstname, ht_lastname, tx_unit_price, tx_qte, pp_ipn_blob, tr_status, tr_complete_date, tx.created_at as tx_date
 FROM remboursemoi_transaction tx
 LEFT JOIN remboursemoi_transfert_request tr ON tx.tr_id = tr.ID
 WHERE bnf_email =  ?
@@ -135,7 +135,7 @@ $(document).ready(function(){
 		<h1>Remboursement entre amis</h1>
 		<form class="appnitro">
 		<div class="form_description">
-			<h2><a href="http://www.remboursemoi.fr">Rembourse moi</a></h2>
+			<h2><a href="http://<?php echo $_SERVER['HTTP_HOST'];?>">Rembourse moi</a></h2>
 			<p>Les bons comptes font les bons amis alors restons amis.</p>
 		</div>
 		</form>
@@ -152,19 +152,21 @@ L'argent sera sur <strong>votre compte sous 30 jours</strong>.<br/>Vous recevrez
 		$sum =  0;
 		foreach($transfert_list as $p) {
 			if($p['tr_status'] == null) {
-				$sum += $p['tx_unit_price'] * $p['tx_qte'];
+				$sum += ($p['tx_unit_price'] * $p['tx_qte'])-$p['tx_fee'];
 			}
 		}
 		
 		?>
-			<h2>Votre solde est de <?php echo number_format($sum,2,',',' ');?>&#8364;</h2>
+			<h2>Votre solde est de <?php echo number_format($sum,2,',',' ');?> &#8364;</h2>
 			<p style="font-size:14px;">
-			<table class="table table-bordered table-hover table-condesed">
+			<table class="table table-bordered table-hover table-condesed" style="font-size:13px;">
 				<thead>
 					<tr>
 						<th>Nom</th>
 						<th>Date</th>
-						<th>Montant</th>
+						<th>Avant commission</th>
+						<th>Frais</th>
+						<th>Montant net</th>
 						<th>Status</th>
 					</tr>
 				</thead>
@@ -186,18 +188,20 @@ L'argent sera sur <strong>votre compte sous 30 jours</strong>.<br/>Vous recevrez
 				?>
 						<td><?php echo htmlentities($p['ht_firstname']).' '.htmlentities($p['ht_lastname']); ?></td>
 						<td><?php echo htmlentities(relative_time(strtotime($p['tx_date']))); ?></td>
-						<td><?php echo htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).'&#8364'; ?></td>
+						<td><?php echo htmlentities(number_format($p['tx_unit_price'] * $p['tx_qte'],2,',',' ')).' &#8364'; ?></td>
+						<td>-<?php echo  number_format($p['tx_fee'],2,',',' ');?> &#8364</td>
+						<td><?php echo number_format(($p['tx_unit_price'] * $p['tx_qte'])-$p['tx_fee'],2,',',' ');?> &#8364</td>
 						<td>
 							<?php
 								switch($p['tr_status']) {
 									case 'PENDING':
-										echo htmlentities('En attente de virement');
+										echo htmlentities('Le virement est en attente');
 									break;
 									case 'COMPLETED':
 										echo htmlentities('Virement efectué');
 									break;
 									default:
-										echo htmlentities('Disponible sur votre compte');
+										echo htmlentities('Virement à demander',ENT_COMPAT,'UTF-8');
 									break;
 								}
 							?>
@@ -236,7 +240,7 @@ L'argent sera sur <strong>votre compte sous 30 jours</strong>.<br/>Vous recevrez
 			
 					<li class="buttons">
 					<input type="hidden" value="<?php echo $hash;?>" name="hash"/>
-				<input id="saveForm" class="button_text" type="submit" name="submit" value="Demaner un virement" />
+				<input id="saveForm" class="button_text" type="submit" name="submit" value="Demander un virement" />
 		</li>
 			</ul>
 				
